@@ -52,27 +52,57 @@ What's the time complexity?
 
 function Stack(capacity) {
   // implement me...
+  this._capacity = capacity || Infinity;
+  this._storage = {};
+  this.length = 0;
+  this._min = Math.min();
 }
 
 Stack.prototype.push = function(value) {
   // implement me...
+  if (this.length < this._capacity) {
+    if(this._min > value) this._min = value;
+    this._storage[this.length++] = value;
+    return this.length;
+  }
+  throw Error("stack overflow.")
 };
 // Time complexity:
 
 Stack.prototype.pop = function() {
   // implement me...
+  if(this.length === 0 ) return;
+  let value = this._storage[this.length-1]
+  delete this._storage[this.length--]
+  return value;
 };
 // Time complexity:
 
 Stack.prototype.peek = function() {
   // implement me...
+  return this._storage[this.length-1];
 };
 // Time complexity:
 
 Stack.prototype.count = function() {
-  // implement me...
+  return this.length;
 };
 // Time complexity:
+
+Stack.prototype.min = function () {
+  return this._min;
+};
+
+let a = new Stack();
+a.push("3");
+a.push("7");
+a.push("1");
+a.push("2");
+console.log(a.peek());
+console.log(a.count());
+console.log(a.min());
+
+
 
 
 /*
