@@ -28,3 +28,24 @@ Stable Variant
 - Implement selection sort for a linked list (you can use your data structure implemention from earlier in the course). How does this impact performance and stability?
 
 */
+
+function selectionSort(arr) {
+  for (let i = 0; i < arr.length-1; i++) {
+    let min = i;
+    for (let j = i+1; j < arr.length; j++) {
+      min = arr[min] <= arr[j] ? min : j;
+    }
+    swap(arr, i, min);
+  }
+
+  function swap(arr, a, b) {
+    if (a !== b) {
+      arr[a] = arr[a]^arr[b];
+      arr[b] = arr[a]^arr[b];
+      arr[a] = arr[a]^arr[b];
+    }
+  }
+  return arr;
+}
+
+console.log(selectionSort([10,4, 7, 3]))
