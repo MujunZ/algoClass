@@ -29,3 +29,29 @@ now repeat for next unsorted element
 (https://en.wikipedia.org/wiki/Shellsort)
 
 */
+
+function insertionSort(arr) {
+  if (arr.length <= 1) {
+    return arr;
+  }
+  for (let i = 1; i < arr.length; i++) {
+    for (let j = i-1; j > -1; j--) {
+      if (arr[i] < arr[j]) {
+        swap(arr, i, j);
+        i = j;
+      }
+    }
+  }
+
+  function swap(arr, i, j) {
+    if (i !== j) {
+      arr[i] = arr[i]^arr[j];
+      arr[j] = arr[i]^arr[j];
+      arr[i] = arr[i]^arr[j];
+    }
+  }
+
+  return arr;
+}
+
+console.log(insertionSort([10, 185, 5, -5, 7, 3]));
