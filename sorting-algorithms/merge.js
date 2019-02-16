@@ -28,3 +28,30 @@ subarrays for regular merge sort: [ [1], [2], [4], [5], [9] ]
 subarrays for natural merge sort: [ [1,2], [4,5], [9] ]
 
 */
+
+function mergeSort(arr) {
+  if (arr.length < 2) {
+    return arr;
+  }
+  let mid = arr.length/2;
+  let left = arr.slice(0, Math.floor(mid));
+  let right = arr.slice(Math.floor(mid));
+
+  return merge(mergeSort(left), mergeSort(right));
+}
+
+function merge(a, b) {
+  let res = [];
+  let aIdx = 0;
+  let bIdx = 0;
+  while (aIdx < a.length && bIdx < b.length) {
+    if (a[aIdx] < b[bIdx]) {
+      res.push(a[aIdx++]);
+    } else {
+      res.push(b[bIdx++]);
+    }
+  }
+  return res.concat(a.slice(aIdx).concat(b.slice(bIdx)));
+}
+
+console.log(mergeSort([5,3,7,-4]))
