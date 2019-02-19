@@ -102,11 +102,9 @@ LinkedList.prototype.forEach = function(callback) {
 
 LinkedList.prototype.print = function() {
   // implement me...
-  let curr = this.head;
-  while (curr) {
-    console.log(curr.value);
-    curr = curr.next;
-  }
+  let res = [];
+  this.forEach(el => {res.push(el)});
+  return res.join(", ");
 };
 // Time complexity: O(n)
 
@@ -153,12 +151,11 @@ LinkedList.prototype.appendToTail = function(value) {
   // implement me...
   let nd = new Node(value);
   let curr = this.head;
-  while (curr) {
-    if (!curr.next) {
-      curr.next = nd;
-    }
+  while (curr.next) {
     curr = curr.next;
   }
+  curr.next = nd;
+  return nd;
 };
 // Time complexity:
 
@@ -174,6 +171,24 @@ LinkedList.prototype.removeBefore = function(node) {
   // implement me...
 };
 // Time complexity:
+
+LinkedList.prototype.reverse = function() {
+  let nh = this.head;
+  helper(nh);
+  this.head = nh;
+  return this.head;
+
+  function helper(head) {
+    if (!head || !head.next) {
+      nh = head;
+      return head;
+    }
+    let tmp = helper(head.next);
+    head.next.next = head;
+    head.next = undefined;
+    return tmp;
+  }
+}
 
 
 
@@ -201,3 +216,10 @@ LinkedList.prototype.removeBefore = function(node) {
 1 1 5 6   (1 -> 1 -> 5 -> 6)
 
  */
+
+let linkedList1 = new LinkedList(1);
+linkedList1.appendToTail(2)
+linkedList1.appendToTail(3)
+linkedList1.appendToTail(4)
+linkedList1.reverse();
+console.log(linkedList1.print());
