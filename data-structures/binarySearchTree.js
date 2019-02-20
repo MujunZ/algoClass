@@ -59,32 +59,97 @@ function BinarySearchTree (value) {
 
 BinarySearchTree.prototype.insert = function(value) {
   // implement me...
+  let nd = new BinarySearchTree(value);
+  if (this.value > value) {
+    if (this.left) {
+      this.left.insert(value);
+    } else {
+      this.left = nd;
+    }
+  } else if(this.value < value) {
+    if (this.right) {
+      this.right.insert(value);
+    } else {
+      this.right = nd;
+    }
+  }
+  return this;
 };
 // Time complexity:
 
 BinarySearchTree.prototype.contains = function(value) {
   // implement me...
+  if (this.value > value) {
+    if (this.left) {
+      return this.left.contains(value)
+    }
+  } else if(this.value < value){
+    if (this.right) {
+      return this.right.contains(value)
+    }
+  } else if(this.value === value) {
+    return true;
+  }
+
+  return false;
 };
 // Time complexity:
 
 BinarySearchTree.prototype.traverseDepthFirst_inOrder = function(fn) {
   // implement me...
+  if (this.left) {
+    this.left.traverseDepthFirst_inOrder(fn);
+  }
+
+  if (this.value) {
+    fn(this.value);
+  }
+
+  if (this.right) {
+    this.right.traverseDepthFirst_inOrder(fn);
+  }
 };
 // Time complexity:
 
 BinarySearchTree.prototype.traverseDepthFirst_preOrder = function(fn) {
   // implement me...
+  if (this.value) {
+    fn(this.value);
+  }
+
+  if (this.left) {
+    this.left.traverseDepthFirst_preOrder(fn);
+  }
+
+  if (this.right) {
+    this.right.traverseDepthFirst_preOrder(fn);
+  }
 };
 // Time complexity:
 
 BinarySearchTree.prototype.traverseDepthFirst_postOrder = function(fn) {
   // implement me...
+  if (this.left) {
+    this.left.traverseDepthFirst_postOrder(fn);
+  }
+
+  if (this.right) {
+    this.right.traverseDepthFirst_postOrder(fn);
+  }
+
+  if (this.value) {
+    fn(this.value);
+  }
 };
 // Time complexity:
 
-
 BinarySearchTree.prototype.checkIfFull = function() {
   // implement me...
+  if (!this.left && !this.right) return true;
+  if (this.left && this.right) {
+    return this.left.checkIfFull(this.left) && this.right.checkIfFull(this.right);
+  }
+  return false;
 };
 // Time complexity:
 
@@ -92,3 +157,7 @@ BinarySearchTree.prototype.checkIfBalanced = function() {
   // implement me...
 };
 // Time complexity:
+
+let fooTree = new BinarySearchTree(10);
+fooTree.insert(5).insert(20).insert(15).insert(21).insert(16).insert(13);
+console.log(fooTree.checkIfFull());
