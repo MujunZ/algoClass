@@ -41,27 +41,48 @@ https://en.wikipedia.org/wiki/Trie
 
 function Tree (value) {
   // implement me...
+  this.val = value;
+  this.children = [];
 }
 
 Tree.prototype.addChild = function(value) {
   // implement me...
+  let nc = new Tree(value);
+  this.children.push(nc);
+  return nc;
 };
 // Time complexity:
-
 
 Tree.prototype.contains = function(value) {
   // implement me...
+  if (this.val === value) {
+    return true;
+  }
+  this.children.forEach(child => {
+    child.contains(value);
+  })
+  return false;
 };
 // Time complexity:
-
+let t = new Tree(5);
+t.addChild(3).addChild(7);
+console.log(t.contains(4));
 
 Tree.prototype.traverseDepthFirst = function(fn) {
   // implement me...
+  if (this.val) {
+    fn(this.val);
+  }
+
+  this.children.forEach(child => {
+    child.traverseDepthFirst(fn)
+  })
 };
 // Time complexity:
 
 
 Tree.prototype.traverseBreadthFirst = function(fn) {
   // implement me...
+  // DO IT AGAIN!
 };
 // Time complexity:
