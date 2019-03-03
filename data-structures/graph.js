@@ -93,45 +93,146 @@ function Graph () {
 
 Graph.prototype.addNode = function(value) {
   // implement me...
+  if (!value) {
+    return;
+  }
+  this._nodes[value] = this._nodes[value] || [];
 };
 // Time complexity:
 
 Graph.prototype.removeNode = function(value) {
   // implement me...
+  this._nodes[value].forEach(neighbor => {
+    let neighborsNeighbors = this._nodes[neighbor];
+    let index = neighborsNeighbors.indexOf(value);
+    neighborsNeighbors.splice(index,1);
+  })
+  delete this._nodes[value];
 };
 // Time complexity:
 
 Graph.prototype.contains = function(value) {
   // implement me...
+  return this._nodes[value];
 };
 // Time complexity:
 
 Graph.prototype.addEdge = function(value1, value2) {
   // implement me...
+  if (!this._nodes[value1] || !this._nodes[value2]) {
+    throw new Error("invalid values");
+  }
+  this._nodes[value1].push(value2)
+  this._nodes[value2].push(value1)
 };
 // Time complexity:
 
 Graph.prototype.removeEdge = function(value1, value2) {
   // implement me...
+  if (!this._nodes[value1] || !this._nodes[value2]) {
+    throw new Error("invalid values");
+  }
+  this._nodes[value1].filter(el => el !== value2);
+  this._nodes[value2].filter(el => el !== value1);
 };
 // Time complexity:
 
 Graph.prototype.hasEdge = function(value1, value2) {
   // implement me...
+  if (!this._nodes[value1] || !this._nodes[value2]) {
+    throw new Error("invalid values");
+  }
+  if (this._nodes[value1].includes(value2) && this._nodes[value2].includes(value1)) {
+    return true;
+  }
+
+  return false;
 };
 // Time complexity:
 
 Graph.prototype.forEach = function(fn) {
   // implement me...
+  for(let node in this._nodes){
+    fn(node, this._nodes[node], this._nodes);
+  }
 };
 // Time complexity:
 
+/*
+{
+  '1': [2, 4],
+  '2': [1, 3, 4],
+  '3': [2, 5],
+  '4': [1, 2],
+  '5': [3]
+}
+*/
+
 Graph.prototype.traverseDepthFirst = function(value, fn, visited, distance) {
   // implement me...
+  if (!this._nodes[value] || typeof fn !== 'function') return 'Invalid value or function';
+  visited = visited || {};
+  distance = distance || 0;
+  fn(value, distance);
+  visited[value] = true;
+  this._nodes[value].forEach((node) =>{
+    if(visited[node]) return;
+    this.traverseDepthFirst(node, fn, visited, distance+1);
+  },this)
 };
 // Time complexity:
 
 Graph.prototype.traverseBreadthFirst = function(value, fn) {
   // implement me...
+  if(!this._nodes[value] || typeof fn !== "function") return "Invalid value or function";
+  let visited = {};
+  let queue = [value];
+  visited[value] = 0;
+  while(queue.length > 0){
+    let node = queue.shift();
+    fn(value, visited[node]);
+    let neighbors = this._nodes[node].filter(neighbor => {
+      if (visited[neighbor] === undefined) {
+        visited[neighbor] = visited[node] + 1;
+        return true;
+      }
+    })
+    queue = queue.concat(neighbors);
+  }
 };
 // Time complexity:
+
+var graph = new Graph();
+
+graph.addNode(1);
+graph.addNode(2);
+graph.addNode(3);
+graph.addNode(4);
+graph.addNode(5);
+console.log(graph._nodes, 'should have 5');
+graph.removeNode(5);
+console.log(graph._nodes, 'should NOT have 5');
+console.log(graph.contains(4), 'should be true');
+console.log(graph.contains(7), 'should be false');
+graph.addEdge(1, 2);
+graph.addEdge(1, 4);
+graph.addEdge(3, 2);
+graph.addEdge(2, 4);
+graph.addEdge(3, 4);
+console.log(graph._nodes);
+graph.removeEdge(4, 3);
+console.log(graph._nodes);
+console.log(graph.hasEdge(1, 2), 'should be true');
+console.log(graph.hasEdge(1, 3), 'should be false');
+graph.forEach(function (node, neighbors) {
+  console.log(node, 'has neighbors:', neighbors);
+});
+graph.addNode(5);
+graph.addEdge(3, 5);
+console.log(graph._nodes);
+var traverseDF = [];
+graph.traverseDepthFirst(1, function (val, dist) { traverseDF.push([val, dist]) });
+console.log(traverseDF, 'should be [ [ 1, 0 ], [ 2, 1 ], [ 3, 2 ], [ 5, 3 ], [ 4, 2 ] ]');
+var traverseBF = [];
+graph.traverseBreadthFirst(1, function (val, dist) { traverseBF.push([val, dist]) });
+console.log(traverseBF, 'should be [ [ 1, 0 ], [ 2, 1 ], [ 4, 1 ], [ 3, 2 ], [ 5, 3 ] ]');
